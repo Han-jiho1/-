@@ -25,25 +25,37 @@
     .panel{display:none}.panel.active{display:block}
     label.section{display:block;font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;margin-top:20px}
     label.section:first-child{margin-top:0}
-    textarea,input[type=text],input[type=date],input[type=number]{width:100%;padding:12px 16px;font-size:14px;color:#334155;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:14px;outline:none;font-family:inherit;transition:border .2s;appearance:none}
-    textarea:focus,input:focus{border-color:#a5b4fc}
-    textarea{resize:none;height:160px}
+    input[type=text],input[type=date],input[type=number]{width:100%;padding:12px 16px;font-size:14px;color:#334155;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:14px;outline:none;font-family:inherit;transition:border .2s;appearance:none}
+    input:focus{border-color:#a5b4fc}
     .btn{width:100%;padding:14px;background:#6366f1;color:#fff;border:none;border-radius:16px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;margin-top:20px}
     .btn:hover{background:#4f46e5}.btn:disabled{opacity:.4;cursor:not-allowed}
-    /* 음성 */
-    .voice-center{display:flex;flex-direction:column;align-items:center;padding:24px 0;gap:20px}
+
+    /* 채팅 UI */
+    .chat-area{overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding-bottom:12px;min-height:280px;max-height:calc(100vh - 340px)}
+    .chat-hint{font-size:12px;color:#94a3b8;text-align:center;padding:20px 0 8px;line-height:1.6}
+    .bubble{max-width:82%;padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.5;word-break:break-word}
+    .bubble.user{align-self:flex-end;background:#6366f1;color:#fff;border-bottom-right-radius:4px}
+    .bubble.bot{align-self:flex-start;background:#f1f5f9;color:#334155;border-bottom-left-radius:4px}
+    .bubble.typing{align-self:flex-start;background:#f1f5f9;color:#94a3b8;font-style:italic;border-bottom-left-radius:4px}
+    .chat-input-row{display:flex;gap:8px;padding-top:12px;border-top:1.5px solid #f1f5f9;margin-top:4px}
+    .chat-input-row input{flex:1;padding:10px 14px;border-radius:50px;border:1.5px solid #e2e8f0;font-size:14px;background:#f8fafc;font-family:inherit;outline:none}
+    .chat-input-row input:focus{border-color:#a5b4fc}
+    .chat-send-btn{width:42px;height:42px;border-radius:50%;background:#6366f1;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s}
+    .chat-send-btn:hover{background:#4f46e5}
+    .chat-send-btn:disabled{background:#cbd5e1;cursor:not-allowed}
+
+    /* 음성 STT */
+    .voice-center{display:flex;flex-direction:column;align-items:center;padding:20px 0;gap:16px}
     .mic-btn{width:96px;height:96px;border-radius:50%;border:none;background:#6366f1;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(99,102,241,.3);transition:all .2s}
-    .mic-btn:hover{transform:scale(1.05)}.mic-btn.recording{background:#ef4444;animation:pulse 1.5s infinite}
+    .mic-btn:hover{transform:scale(1.05)}
+    .mic-btn.listening{background:#ef4444;animation:pulse 1.5s infinite}
     .mic-btn:disabled{background:#cbd5e1;box-shadow:none;cursor:not-allowed}
     @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{box-shadow:0 0 0 14px rgba(239,68,68,0)}}
-    .rec-status{font-size:13px;font-weight:600;color:#ef4444;display:flex;align-items:center;gap:6px}
-    .dot{width:8px;height:8px;background:#ef4444;border-radius:50%;animation:pulse 1.5s infinite}
-    .audio-box{width:100%;background:#f8fafc;border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:10px}
-    .audio-header{display:flex;justify-content:space-between;align-items:center}
-    .audio-header span{font-size:13px;font-weight:600;color:#475569}
-    .del-btn{background:none;border:none;cursor:pointer;color:#cbd5e1;font-size:18px;line-height:1;padding:2px}
-    .del-btn:hover{color:#ef4444}
-    audio{width:100%;height:36px}
+    .voice-status{font-size:13px;font-weight:600;color:#64748b;text-align:center}
+    .voice-status.active{color:#ef4444}
+    .voice-transcript{width:100%;min-height:80px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:14px;padding:12px 16px;font-size:14px;color:#334155;line-height:1.5;margin-top:4px}
+    .hint{font-size:12px;color:#94a3b8;text-align:center}
+
     /* 폼 */
     .item-card{background:#f8fafc;border-radius:16px;padding:14px;margin-bottom:10px}
     .item-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
@@ -53,34 +65,38 @@
     .subtotal{text-align:right;font-size:12px;color:#6366f1;font-weight:700;margin-top:6px}
     .add-item{width:100%;padding:10px;background:none;border:2px dashed #c7d2fe;border-radius:14px;color:#818cf8;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s}
     .add-item:hover{background:#eef2ff}
+    .del-btn{background:none;border:none;cursor:pointer;color:#cbd5e1;font-size:18px;line-height:1;padding:2px}
+    .del-btn:hover{color:#ef4444}
     .total-row{display:flex;justify-content:space-between;align-items:center;padding:12px 4px;border-top:1.5px solid #e2e8f0;margin-top:4px}
     .total-row .label{font-size:14px;font-weight:700;color:#475569}
     .total-row .amount{font-size:15px;font-weight:800;color:#6366f1}
-    /* 성공 */
-    .success{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 0;gap:16px;text-align:center}
-    .success-icon{width:80px;height:80px;border-radius:50%;background:#f0fdf4;display:flex;align-items:center;justify-content:center}
-    .success h3{font-size:18px;font-weight:800;color:#1e293b}
-    .success p{font-size:13px;color:#94a3b8;line-height:1.6}
-    .reset-btn{margin-top:8px;padding:10px 24px;background:none;border:1.5px solid #e2e8f0;border-radius:50px;font-size:13px;font-weight:600;color:#64748b;cursor:pointer}
-    .reset-btn:hover{background:#f8fafc}
-    .hint{font-size:12px;color:#94a3b8;text-align:center}
-    /* 채팅 UI */
-    .chat-area{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding-bottom:12px;min-height:300px;max-height:calc(100vh - 320px)}
-    .chat-hint{font-size:12px;color:#94a3b8;text-align:center;padding:20px 0 8px;line-height:1.6}
-    .bubble{max-width:80%;padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.5;word-break:break-word}
-    .bubble.user{align-self:flex-end;background:#6366f1;color:#fff;border-bottom-right-radius:4px}
-    .bubble.bot{align-self:flex-start;background:#f1f5f9;color:#334155;border-bottom-left-radius:4px}
-    .bubble.bot.typing{color:#94a3b8;font-style:italic}
-    .bubble.done{align-self:flex-start;background:#f0fdf4;color:#16a34a;border-bottom-left-radius:4px;font-weight:600}
-    .chat-input-row{display:flex;gap:8px;padding-top:12px;border-top:1.5px solid #f1f5f9;margin-top:4px}
-    .chat-input-row input{flex:1;padding:10px 14px;border-radius:50px;border:1.5px solid #e2e8f0;font-size:14px;background:#f8fafc;font-family:inherit;outline:none}
-    .chat-input-row input:focus{border-color:#a5b4fc}
-    .chat-send-btn{width:42px;height:42px;border-radius:50%;background:#6366f1;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s}
-    .chat-send-btn:hover{background:#4f46e5}
-    .chat-send-btn:disabled{background:#cbd5e1;cursor:not-allowed}
+
+    /* 완성 팝업 */
+    .popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+    .popup-overlay.show{opacity:1;pointer-events:all}
+    .popup-box{background:#fff;width:100%;max-width:440px;border-radius:28px 28px 0 0;padding:32px 24px calc(32px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
+    .popup-overlay.show .popup-box{transform:translateY(0)}
+    .popup-icon{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#818cf8);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+    .popup-title{font-size:20px;font-weight:800;color:#1e293b;text-align:center;margin-bottom:8px}
+    .popup-msg{font-size:14px;color:#64748b;text-align:center;line-height:1.6;margin-bottom:24px}
+    .popup-close{width:100%;padding:14px;background:#6366f1;color:#fff;border:none;border-radius:16px;font-size:14px;font-weight:700;cursor:pointer}
+    .popup-close:hover{background:#4f46e5}
   </style>
 </head>
 <body>
+
+<!-- 완성 팝업 -->
+<div class="popup-overlay" id="popup" onclick="closePopup(event)">
+  <div class="popup-box">
+    <div class="popup-icon">
+      <svg width="36" height="36" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <div class="popup-title">견적서 완성! 🎉</div>
+    <div class="popup-msg" id="popup-msg">견적서가 완성되었습니다.<br/>담당자가 곧 연락드릴게요.</div>
+    <button class="popup-close" onclick="closePopup()">확인</button>
+  </div>
+</div>
+
 <div class="card">
   <div class="header">
     <small>견적 요청</small>
@@ -104,7 +120,8 @@
   </div>
 
   <div class="content">
-    <!-- 메시지 탭: 채팅 UI -->
+
+    <!-- 메시지 탭: 채팅 -->
     <div id="panel-message" class="panel active" style="display:flex;flex-direction:column;height:100%">
       <div class="chat-area" id="chat-area">
         <div class="chat-hint">견적 내용을 자유롭게 말씀해주세요.<br/>부족한 내용은 추가로 여쭤볼게요.</div>
@@ -117,26 +134,19 @@
       </div>
     </div>
 
-    <!-- 음성 탭 -->
+    <!-- 음성 탭: STT -->
     <div id="panel-voice" class="panel">
-      <p style="font-size:13px;color:#94a3b8;margin-bottom:4px">버튼을 눌러 음성으로 견적 내용을 말해주세요.</p>
+      <p style="font-size:13px;color:#94a3b8;margin-bottom:16px">버튼을 누르고 말하면 텍스트로 변환돼요.</p>
       <div class="voice-center">
-        <button class="mic-btn" id="mic-btn" onclick="toggleRecording()">
+        <button class="mic-btn" id="mic-btn" onclick="toggleSTT()">
           <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
         </button>
-        <p class="hint" id="voice-hint">버튼을 눌러 녹음 시작</p>
-        <div class="rec-status" id="rec-status" style="display:none"><span class="dot"></span><span id="rec-time">00:00</span> 녹음 중</div>
-        <div class="audio-box" id="audio-box" style="display:none">
-          <div class="audio-header">
-            <span id="audio-label">녹음 완료</span>
-            <button class="del-btn" onclick="resetRecording()">✕</button>
-          </div>
-          <audio id="audio-player" controls></audio>
-        </div>
+        <p class="voice-status" id="voice-status">버튼을 눌러 말하기</p>
       </div>
-      <button class="btn" id="send-voice-btn" onclick="sendVoice()" disabled>
+      <div class="voice-transcript" id="voice-transcript" style="display:none"></div>
+      <button class="btn" id="send-voice-btn" onclick="sendVoiceText()" disabled style="margin-top:16px">
         <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        음성 견적 요청 보내기
+        이 내용으로 견적 요청
       </button>
     </div>
 
@@ -148,7 +158,6 @@
         <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:4px">견적서 날짜</label>
         <input type="date" id="project-date"/>
       </div>
-
       <label class="section">품목 <span style="font-weight:400;text-transform:none">(최대 4개)</span></label>
       <div id="items-container"></div>
       <button class="add-item" id="add-item-btn" onclick="addItem()">+ 품목 추가</button>
@@ -162,31 +171,38 @@
       </button>
     </div>
 
-    <!-- 성공 화면 -->
-    <div id="panel-success" class="panel">
-      <div class="success">
-        <div class="success-icon">
-          <svg width="40" height="40" fill="none" stroke="#22c55e" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
-        </div>
-        <h3>견적 요청 완료!</h3>
-        <p>요청이 접수되었습니다.<br/>곧 견적서가 작성됩니다.</p>
-        <button class="reset-btn" onclick="resetAll()">새 견적 요청</button>
-      </div>
-    </div>
   </div>
 </div>
 
 <script>
 const WEBHOOK = "https://hanjiho.app.n8n.cloud/webhook/tally-invoice";
 
-// ── 탭 전환 ─────────────────────────────────────────────────────────────────
+// ── 탭 전환 ────────────────────────────────────────────────────────────────
 function switchTab(id) {
-  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('active', ['message','voice','form'][i]===id));
-  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['message','voice','form'][i]===id));
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.getElementById('panel-'+id).classList.add('active');
 }
 
-// ── 채팅 (메시지 탭) ─────────────────────────────────────────────────────────
+// ── 팝업 ───────────────────────────────────────────────────────────────────
+function showPopup(msg) {
+  if (msg) document.getElementById('popup-msg').innerHTML = msg;
+  document.getElementById('popup').classList.add('show');
+  // 브라우저 알림 (권한 있으면)
+  if (Notification.permission === 'granted') {
+    new Notification('견적서 완성! 🎉', { body: '견적서가 완성되었습니다.', icon: '/icon-192.png' });
+  }
+}
+function closePopup(e) {
+  if (e && e.target !== document.getElementById('popup')) return;
+  document.getElementById('popup').classList.remove('show');
+}
+// 알림 권한 요청
+if ('Notification' in window && Notification.permission === 'default') {
+  Notification.requestPermission();
+}
+
+// ── 채팅 (메시지 탭) ────────────────────────────────────────────────────────
 let chatHistory = [];
 
 function addBubble(type, text) {
@@ -210,7 +226,7 @@ async function sendChat() {
   addBubble('user', text);
   chatHistory.push({role:'user', content:text});
 
-  const typing = addBubble('bot typing', '입력 중...');
+  const typing = addBubble('typing', '입력 중...');
   try {
     const res = await fetch(WEBHOOK, {
       method:'POST',
@@ -220,12 +236,16 @@ async function sendChat() {
     const data = await res.json().catch(()=>({}));
     typing.remove();
 
-    if (data.reply) {
+    if (data.done) {
+      addBubble('bot', data.message || '견적 요청이 접수되었습니다!');
+      showPopup(data.message ? data.message.replace(/\n/g,'<br/>') : null);
+      chatHistory = [];
+    } else if (data.reply) {
       addBubble('bot', data.reply);
       chatHistory.push({role:'assistant', content:data.reply});
     } else {
-      addBubble('done', '✅ 견적 요청이 접수되었습니다!');
-      input.placeholder = '추가 메시지...';
+      addBubble('bot', '✅ 접수되었습니다!');
+      showPopup();
     }
   } catch {
     typing.remove();
@@ -235,72 +255,105 @@ async function sendChat() {
   input.focus();
 }
 
-// ── 음성 녹음 ────────────────────────────────────────────────────────────────
-let mediaRecorder, audioBlob, audioUrl, timerInterval, seconds=0;
+// ── 음성 STT ───────────────────────────────────────────────────────────────
+let recognition = null;
+let isListening = false;
+let finalTranscript = '';
 
-function toggleRecording() {
-  if (!mediaRecorder || mediaRecorder.state==='inactive') startRec();
-  else stopRec();
+function initSTT() {
+  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRec) {
+    document.getElementById('voice-status').textContent = '이 브라우저는 음성 인식을 지원하지 않아요';
+    document.getElementById('mic-btn').disabled = true;
+    return false;
+  }
+  recognition = new SpeechRec();
+  recognition.lang = 'ko-KR';
+  recognition.continuous = true;
+  recognition.interimResults = true;
+
+  recognition.onresult = e => {
+    let interim = '';
+    finalTranscript = '';
+    for (let i = 0; i < e.results.length; i++) {
+      if (e.results[i].isFinal) finalTranscript += e.results[i][0].transcript;
+      else interim += e.results[i][0].transcript;
+    }
+    const box = document.getElementById('voice-transcript');
+    box.style.display = 'block';
+    box.textContent = (finalTranscript + interim) || '';
+    document.getElementById('send-voice-btn').disabled = !finalTranscript;
+  };
+
+  recognition.onend = () => {
+    if (isListening) recognition.start(); // continuous
+  };
+
+  recognition.onerror = e => {
+    document.getElementById('voice-status').textContent = '오류: ' + e.error;
+    stopSTT();
+  };
+  return true;
 }
 
-async function startRec() {
+function toggleSTT() {
+  if (isListening) stopSTT();
+  else startSTT();
+}
+
+function startSTT() {
+  if (!recognition && !initSTT()) return;
+  finalTranscript = '';
+  document.getElementById('voice-transcript').style.display = 'none';
+  document.getElementById('send-voice-btn').disabled = true;
+  recognition.start();
+  isListening = true;
+  document.getElementById('mic-btn').classList.add('listening');
+  document.getElementById('voice-status').textContent = '듣고 있어요... (다시 누르면 중지)';
+  document.getElementById('voice-status').className = 'voice-status active';
+}
+
+function stopSTT() {
+  if (recognition) recognition.stop();
+  isListening = false;
+  document.getElementById('mic-btn').classList.remove('listening');
+  document.getElementById('voice-status').textContent = '버튼을 눌러 말하기';
+  document.getElementById('voice-status').className = 'voice-status';
+}
+
+async function sendVoiceText() {
+  const text = document.getElementById('voice-transcript').textContent.trim();
+  if (!text) return;
+  stopSTT();
+  const btn = document.getElementById('send-voice-btn');
+  btn.disabled = true;
+  btn.textContent = '전송 중...';
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({audio:true});
-    const chunks = [];
-    mediaRecorder = new MediaRecorder(stream);
-    mediaRecorder.ondataavailable = e => chunks.push(e.data);
-    mediaRecorder.onstop = () => {
-      audioBlob = new Blob(chunks, {type:'audio/webm'});
-      audioUrl = URL.createObjectURL(audioBlob);
-      document.getElementById('audio-player').src = audioUrl;
-      document.getElementById('audio-label').textContent = '녹음 완료 · ' + fmt(seconds);
-      document.getElementById('audio-box').style.display = 'flex';
-      document.getElementById('audio-box').style.flexDirection = 'column';
-      document.getElementById('send-voice-btn').disabled = false;
-      document.getElementById('voice-hint').style.display = 'none';
-      stream.getTracks().forEach(t=>t.stop());
-    };
-    mediaRecorder.start();
-    seconds = 0;
-    document.getElementById('mic-btn').classList.add('recording');
-    document.getElementById('rec-status').style.display = 'flex';
-    document.getElementById('voice-hint').style.display = 'none';
-    timerInterval = setInterval(()=>{ seconds++; document.getElementById('rec-time').textContent=fmt(seconds); },1000);
-  } catch { alert('마이크 접근 권한이 필요합니다.'); }
+    const res = await fetch(WEBHOOK, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({source_type:'voice', content:text})
+    });
+    const data = await res.json().catch(()=>({}));
+    if (data.done || !data.reply) {
+      showPopup(data.message ? data.message.replace(/\n/g,'<br/>') : null);
+      document.getElementById('voice-transcript').textContent = '';
+      document.getElementById('voice-transcript').style.display = 'none';
+    } else {
+      // 추가 질문 있으면 채팅탭으로 이동해서 계속
+      switchTab('message');
+      addBubble('user', text);
+      addBubble('bot', data.reply);
+      chatHistory = [{role:'user',content:text},{role:'assistant',content:data.reply}];
+    }
+  } catch {
+    alert('전송 실패. 인터넷 연결을 확인해주세요.');
+  }
+  btn.disabled = false;
+  btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> 이 내용으로 견적 요청';
 }
 
-function stopRec() {
-  mediaRecorder.stop();
-  clearInterval(timerInterval);
-  document.getElementById('mic-btn').classList.remove('recording');
-  document.getElementById('mic-btn').disabled = true;
-  document.getElementById('rec-status').style.display = 'none';
-}
-
-function resetRecording() {
-  audioBlob=null; audioUrl=null; seconds=0;
-  document.getElementById('audio-box').style.display='none';
-  document.getElementById('audio-player').src='';
-  document.getElementById('mic-btn').disabled=false;
-  document.getElementById('mic-btn').classList.remove('recording');
-  document.getElementById('send-voice-btn').disabled=true;
-  document.getElementById('voice-hint').style.display='block';
-  document.getElementById('rec-status').style.display='none';
-  if(mediaRecorder){ try{mediaRecorder.stop();}catch(e){} }
-  mediaRecorder=null;
-}
-
-async function sendVoice() {
-  if (!audioBlob) return;
-  const fd = new FormData();
-  fd.append('source_type','voice');
-  fd.append('audio', audioBlob, 'voice.webm');
-  await send(fd, true);
-}
-
-const fmt = s => `${String(Math.floor(s/60)).padStart(2,'0')}:${String(s%60).padStart(2,'0')}`;
-
-// ── 폼 ──────────────────────────────────────────────────────────────────────
+// ── 폼 ─────────────────────────────────────────────────────────────────────
 let itemCount = 0;
 
 function addItem() {
@@ -308,8 +361,7 @@ function addItem() {
   itemCount++;
   const n = itemCount;
   const div = document.createElement('div');
-  div.className = 'item-card';
-  div.id = 'item-'+n;
+  div.className = 'item-card'; div.id = 'item-'+n;
   div.innerHTML = `
     <div class="item-head">
       <span>품목 ${n}</span>
@@ -323,7 +375,6 @@ function addItem() {
     <div class="subtotal" id="isub-${n}"></div>`;
   document.getElementById('items-container').appendChild(div);
   if (itemCount>=4) document.getElementById('add-item-btn').style.display='none';
-  // set today's date
   if (n===1) document.getElementById('project-date').value = new Date().toISOString().split('T')[0];
 }
 
@@ -336,15 +387,16 @@ function removeItem(n) {
 
 function calcTotal() {
   let total = 0;
-  for (let i=1; i<=4; i++) {
+  for (let i=1;i<=4;i++) {
     const cnt = parseFloat(document.getElementById('icount-'+i)?.value||0);
     const prc = parseFloat(document.getElementById('iprice-'+i)?.value||0);
     const sub = cnt*prc;
-    if (document.getElementById('isub-'+i)) document.getElementById('isub-'+i).textContent = sub>0?`소계: ${sub.toLocaleString()}원`:'';
-    total += sub;
+    const el = document.getElementById('isub-'+i);
+    if (el) el.textContent = sub>0?`소계: ${sub.toLocaleString()}원`:'';
+    total+=sub;
   }
   const row = document.getElementById('total-row');
-  if (total>0) { row.style.display='flex'; document.getElementById('total-amount').textContent=total.toLocaleString()+'원'; }
+  if (total>0){row.style.display='flex';document.getElementById('total-amount').textContent=total.toLocaleString()+'원';}
   else row.style.display='none';
 }
 
@@ -354,62 +406,31 @@ async function sendForm() {
   const name1 = document.getElementById('iname-1')?.value.trim();
   if (!company) return alert('고객사명을 입력해주세요.');
   if (!name1) return alert('품목명을 입력해주세요.');
-
-  const fields = [
-    {label:'고객사명', value:company},
-    {label:'견적서 날짜', value:date},
-  ];
-  for (let i=1; i<=4; i++) {
+  const fields = [{label:'고객사명',value:company},{label:'견적서 날짜',value:date}];
+  for (let i=1;i<=4;i++) {
     const nm = document.getElementById('iname-'+i)?.value.trim();
     if (!nm) continue;
-    fields.push({label:`품목 ${i} - 품목명`, value:nm});
-    fields.push({label:`품목 ${i} - 수량`, value:Number(document.getElementById('icount-'+i)?.value||1)});
-    fields.push({label:`품목 ${i} - 단가`, value:Number(document.getElementById('iprice-'+i)?.value||0)});
+    fields.push({label:`품목 ${i} - 품목명`,value:nm});
+    fields.push({label:`품목 ${i} - 수량`,value:Number(document.getElementById('icount-'+i)?.value||1)});
+    fields.push({label:`품목 ${i} - 단가`,value:Number(document.getElementById('iprice-'+i)?.value||0)});
   }
-  await send({data:{fields}});
-}
-
-// ── 공통 전송 ────────────────────────────────────────────────────────────────
-async function send(payload, isFormData=false) {
-  const btns = document.querySelectorAll('.btn');
-  btns.forEach(b=>{ b.disabled=true; b.textContent='전송 중...'; });
+  const btn = document.querySelector('#panel-form .btn');
+  btn.disabled=true; btn.textContent='전송 중...';
   try {
-    const opts = isFormData
-      ? {method:'POST', body:payload}
-      : {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload)};
-    await fetch(WEBHOOK, opts);
-    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-    document.getElementById('panel-success').classList.add('active');
-  } catch {
-    alert('전송 실패. 인터넷 연결을 확인해주세요.');
-  } finally {
-    btns.forEach(b=>b.disabled=false);
-  }
+    const res = await fetch(WEBHOOK, {
+      method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({data:{fields}})
+    });
+    const data = await res.json().catch(()=>({}));
+    showPopup(data.message ? data.message.replace(/\n/g,'<br/>') : null);
+  } catch { alert('전송 실패. 인터넷 연결을 확인해주세요.'); }
+  btn.disabled=false;
+  btn.innerHTML='<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> 견적서 요청 보내기';
 }
 
-function resetAll() {
-  chatHistory = [];
-  const area = document.getElementById('chat-area');
-  area.innerHTML = '<div class="chat-hint">견적 내용을 자유롭게 말씀해주세요.<br/>부족한 내용은 추가로 여쭤볼게요.</div>';
-  document.getElementById('chat-input').value = '';
-  document.getElementById('chat-input').placeholder = '메시지 입력...';
-  resetRecording();
-  document.getElementById('client-company').value='';
-  document.getElementById('items-container').innerHTML='';
-  itemCount=0;
-  document.getElementById('add-item-btn').style.display='block';
-  document.getElementById('total-row').style.display='none';
-  switchTab('message');
-  addItem();
-}
-
-// ── 초기화 ──────────────────────────────────────────────────────────────────
+// ── 초기화 ─────────────────────────────────────────────────────────────────
 addItem();
-
-// ── Service Worker ───────────────────────────────────────────────────────────
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(()=>{});
-}
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
 </script>
 </body>
 </html>
