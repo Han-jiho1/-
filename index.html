@@ -64,6 +64,20 @@
     .reset-btn{margin-top:8px;padding:10px 24px;background:none;border:1.5px solid #e2e8f0;border-radius:50px;font-size:13px;font-weight:600;color:#64748b;cursor:pointer}
     .reset-btn:hover{background:#f8fafc}
     .hint{font-size:12px;color:#94a3b8;text-align:center}
+    /* 채팅 UI */
+    .chat-area{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding-bottom:12px;min-height:300px;max-height:calc(100vh - 320px)}
+    .chat-hint{font-size:12px;color:#94a3b8;text-align:center;padding:20px 0 8px;line-height:1.6}
+    .bubble{max-width:80%;padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.5;word-break:break-word}
+    .bubble.user{align-self:flex-end;background:#6366f1;color:#fff;border-bottom-right-radius:4px}
+    .bubble.bot{align-self:flex-start;background:#f1f5f9;color:#334155;border-bottom-left-radius:4px}
+    .bubble.bot.typing{color:#94a3b8;font-style:italic}
+    .bubble.done{align-self:flex-start;background:#f0fdf4;color:#16a34a;border-bottom-left-radius:4px;font-weight:600}
+    .chat-input-row{display:flex;gap:8px;padding-top:12px;border-top:1.5px solid #f1f5f9;margin-top:4px}
+    .chat-input-row input{flex:1;padding:10px 14px;border-radius:50px;border:1.5px solid #e2e8f0;font-size:14px;background:#f8fafc;font-family:inherit;outline:none}
+    .chat-input-row input:focus{border-color:#a5b4fc}
+    .chat-send-btn{width:42px;height:42px;border-radius:50%;background:#6366f1;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s}
+    .chat-send-btn:hover{background:#4f46e5}
+    .chat-send-btn:disabled{background:#cbd5e1;cursor:not-allowed}
   </style>
 </head>
 <body>
@@ -90,14 +104,17 @@
   </div>
 
   <div class="content">
-    <!-- 메시지 탭 -->
-    <div id="panel-message" class="panel active">
-      <p style="font-size:13px;color:#94a3b8;margin-bottom:16px">견적 내용을 자유롭게 작성해주세요.</p>
-      <textarea id="msg-text" placeholder="예) ABC회사 홈페이지 리뉴얼 10페이지, 반응형 제작 견적 부탁드립니다..."></textarea>
-      <button class="btn" onclick="sendMessage()">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        견적 요청 보내기
-      </button>
+    <!-- 메시지 탭: 채팅 UI -->
+    <div id="panel-message" class="panel active" style="display:flex;flex-direction:column;height:100%">
+      <div class="chat-area" id="chat-area">
+        <div class="chat-hint">견적 내용을 자유롭게 말씀해주세요.<br/>부족한 내용은 추가로 여쭤볼게요.</div>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" id="chat-input" placeholder="메시지 입력..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"/>
+        <button class="chat-send-btn" id="chat-send-btn" onclick="sendChat()">
+          <svg width="18" height="18" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        </button>
+      </div>
     </div>
 
     <!-- 음성 탭 -->
@@ -169,11 +186,53 @@ function switchTab(id) {
   document.getElementById('panel-'+id).classList.add('active');
 }
 
-// ── 메시지 전송 ──────────────────────────────────────────────────────────────
-async function sendMessage() {
-  const text = document.getElementById('msg-text').value.trim();
-  if (!text) return alert('내용을 입력해주세요.');
-  await send({source_type:'message', content:text});
+// ── 채팅 (메시지 탭) ─────────────────────────────────────────────────────────
+let chatHistory = [];
+
+function addBubble(type, text) {
+  const area = document.getElementById('chat-area');
+  const div = document.createElement('div');
+  div.className = 'bubble ' + type;
+  div.textContent = text;
+  area.appendChild(div);
+  area.scrollTop = area.scrollHeight;
+  return div;
+}
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const text = input.value.trim();
+  if (!text) return;
+  const btn = document.getElementById('chat-send-btn');
+  btn.disabled = true;
+  input.value = '';
+
+  addBubble('user', text);
+  chatHistory.push({role:'user', content:text});
+
+  const typing = addBubble('bot typing', '입력 중...');
+  try {
+    const res = await fetch(WEBHOOK, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({source_type:'message', content:text, history:chatHistory})
+    });
+    const data = await res.json().catch(()=>({}));
+    typing.remove();
+
+    if (data.reply) {
+      addBubble('bot', data.reply);
+      chatHistory.push({role:'assistant', content:data.reply});
+    } else {
+      addBubble('done', '✅ 견적 요청이 접수되었습니다!');
+      input.placeholder = '추가 메시지...';
+    }
+  } catch {
+    typing.remove();
+    addBubble('bot', '❌ 전송 실패. 인터넷 연결을 확인해주세요.');
+  }
+  btn.disabled = false;
+  input.focus();
 }
 
 // ── 음성 녹음 ────────────────────────────────────────────────────────────────
@@ -329,7 +388,11 @@ async function send(payload, isFormData=false) {
 }
 
 function resetAll() {
-  document.getElementById('msg-text').value='';
+  chatHistory = [];
+  const area = document.getElementById('chat-area');
+  area.innerHTML = '<div class="chat-hint">견적 내용을 자유롭게 말씀해주세요.<br/>부족한 내용은 추가로 여쭤볼게요.</div>';
+  document.getElementById('chat-input').value = '';
+  document.getElementById('chat-input').placeholder = '메시지 입력...';
   resetRecording();
   document.getElementById('client-company').value='';
   document.getElementById('items-container').innerHTML='';
