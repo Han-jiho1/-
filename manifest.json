@@ -1,7 +1,7 @@
 {
   "name": "견적 요청",
   "short_name": "견적",
-  "description": "메시지·음성·폼으로 견적을 요청하세요",
+  "description": "음성·폼으로 견적을 요청하세요",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
