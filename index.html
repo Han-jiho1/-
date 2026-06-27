@@ -14,200 +14,576 @@
     *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
     body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:linear-gradient(135deg,#f8fafc,#eef2ff);min-height:100vh;display:flex;justify-content:center;padding-top:env(safe-area-inset-top)}
     .card{width:100%;max-width:440px;background:#fff;min-height:100vh;box-shadow:0 20px 60px rgba(0,0,0,.12);display:flex;flex-direction:column}
-    .header{padding:40px 24px 16px}
-    .header small{font-size:11px;font-weight:700;color:#818cf8;letter-spacing:.1em;text-transform:uppercase}
-    .header h1{font-size:24px;font-weight:800;color:#1e293b;margin-top:4px}
-    .header p{font-size:13px;color:#94a3b8;margin-top:4px}
-    .tabs{display:flex;background:#f1f5f9;border-radius:16px;padding:4px;margin:0 24px;gap:4px}
-    .tab{flex:1;padding:10px;border:none;background:none;border-radius:12px;font-size:13px;font-weight:600;color:#94a3b8;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s}
-    .tab.active{background:#fff;color:#6366f1;box-shadow:0 1px 4px rgba(0,0,0,.1)}
-    .content{padding:24px;flex:1;overflow-y:auto;padding-bottom:calc(24px + env(safe-area-inset-bottom))}
-    .panel{display:none}.panel.active{display:block}
-    label.section{display:block;font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;margin-top:20px}
-    label.section:first-child{margin-top:0}
-    input[type=text],input[type=date],input[type=number]{width:100%;padding:12px 16px;font-size:14px;color:#334155;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:14px;outline:none;font-family:inherit;transition:border .2s;appearance:none}
-    input:focus{border-color:#a5b4fc}
-    .btn{width:100%;padding:14px;background:#6366f1;color:#fff;border:none;border-radius:16px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;margin-top:20px}
-    .btn:hover{background:#4f46e5}.btn:disabled{opacity:.4;cursor:not-allowed}
 
-    /* 채팅 UI */
-    .chat-area{overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding-bottom:12px;min-height:280px;max-height:calc(100vh - 340px)}
-    .chat-hint{font-size:12px;color:#94a3b8;text-align:center;padding:20px 0 8px;line-height:1.6}
+    /* 화면 관리 */
+    .screen{display:none;flex-direction:column;flex:1}
+    .screen.active{display:flex}
+
+    /* 헤더 */
+    .hd{padding:40px 24px 16px}
+    .hd small{font-size:11px;font-weight:700;color:#818cf8;letter-spacing:.1em;text-transform:uppercase}
+    .hd h1{font-size:24px;font-weight:800;color:#1e293b;margin-top:4px}
+    .hd p{font-size:13px;color:#94a3b8;margin-top:4px}
+
+    /* 공통 */
+    .content{padding:24px;flex:1;overflow-y:auto;padding-bottom:calc(24px + env(safe-area-inset-bottom))}
+    .fg{margin-bottom:14px}
+    label{display:block;font-size:12px;font-weight:600;color:#64748b;margin-bottom:5px}
+    input[type=text],input[type=email],input[type=password],input[type=date],input[type=number]{width:100%;padding:12px 16px;font-size:14px;color:#334155;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:14px;outline:none;font-family:inherit;transition:border .2s;-webkit-appearance:none;appearance:none}
+    input:focus{border-color:#a5b4fc}
+    .btn{width:100%;padding:14px;background:#6366f1;color:#fff;border:none;border-radius:16px;font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:background .2s;font-family:inherit;margin-top:10px}
+    .btn:hover{background:#4f46e5}
+    .btn:disabled{opacity:.4;cursor:not-allowed}
+    .btn-outline{background:none;border:1.5px solid #e2e8f0;color:#64748b}
+    .btn-outline:hover{background:#f8fafc}
+    .btn-danger{background:#ef4444;margin-top:0}
+    .btn-danger:hover{background:#dc2626}
+    .btn-success{background:#22c55e;margin-top:0}
+    .btn-success:hover{background:#16a34a}
+    .btn-sm{padding:7px 13px;font-size:12px;border-radius:10px;width:auto;margin-top:0}
+    .err{color:#ef4444;font-size:13px;margin-top:6px;min-height:18px}
+    .divider{display:flex;align-items:center;gap:12px;margin:14px 0}
+    .divider::before,.divider::after{content:'';flex:1;height:1px;background:#e2e8f0}
+    .divider span{font-size:12px;color:#94a3b8}
+
+    /* 인증 탭 */
+    .auth-tabs{display:flex;background:#f1f5f9;border-radius:16px;padding:4px;margin-bottom:20px;gap:4px}
+    .auth-tab{flex:1;padding:10px;border:none;background:none;border-radius:12px;font-size:13px;font-weight:600;color:#94a3b8;cursor:pointer;transition:all .2s;font-family:inherit}
+    .auth-tab.active{background:#fff;color:#6366f1;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+    .auth-panel{display:none}
+    .auth-panel.active{display:block}
+
+    /* 대기 화면 */
+    .wait-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:1;text-align:center;padding:40px 24px}
+    .wait-icon{font-size:56px;margin-bottom:20px}
+    .wait-title{font-size:20px;font-weight:800;color:#1e293b;margin-bottom:10px}
+    .wait-desc{font-size:14px;color:#64748b;line-height:1.7}
+
+    /* 앱 탭 */
+    .tabs{display:flex;background:#f1f5f9;border-radius:16px;padding:4px;margin:0 24px;gap:4px}
+    .tab{flex:1;padding:10px;border:none;background:none;border-radius:12px;font-size:13px;font-weight:600;color:#94a3b8;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s;font-family:inherit}
+    .tab.active{background:#fff;color:#6366f1;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+    .panel{display:none}
+    .panel.active{display:block}
+
+    /* 음성 */
+    .vc{display:flex;flex-direction:column;align-items:center;padding:16px 0 8px;gap:14px}
+    .mic-btn{width:80px;height:80px;border-radius:50%;border:none;background:#6366f1;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(99,102,241,.3);transition:all .2s;flex-shrink:0}
+    .mic-btn:hover{transform:scale(1.05)}
+    .mic-btn.on{background:#ef4444;animation:pulse 1.5s infinite}
+    .mic-btn:disabled{background:#cbd5e1;box-shadow:none;cursor:not-allowed;transform:none}
+    @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{box-shadow:0 0 0 14px rgba(239,68,68,0)}}
+    .vs{font-size:13px;font-weight:600;color:#64748b;text-align:center}
+    .vs.on{color:#ef4444}
+    .transcript{width:100%;min-height:56px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:14px;padding:12px 16px;font-size:14px;color:#334155;line-height:1.5;margin:4px 0}
+
+    /* 채팅 */
+    .chat-area{overflow-y:auto;display:flex;flex-direction:column;gap:10px;min-height:140px;max-height:260px;margin-top:10px}
+    .chat-hint{font-size:12px;color:#94a3b8;text-align:center;padding:16px 0;line-height:1.6}
     .bubble{max-width:82%;padding:10px 14px;border-radius:18px;font-size:14px;line-height:1.5;word-break:break-word}
     .bubble.user{align-self:flex-end;background:#6366f1;color:#fff;border-bottom-right-radius:4px}
     .bubble.bot{align-self:flex-start;background:#f1f5f9;color:#334155;border-bottom-left-radius:4px}
     .bubble.typing{align-self:flex-start;background:#f1f5f9;color:#94a3b8;font-style:italic;border-bottom-left-radius:4px}
-    .chat-input-row{display:flex;gap:8px;padding-top:12px;border-top:1.5px solid #f1f5f9;margin-top:4px}
-    .chat-input-row input{flex:1;padding:10px 14px;border-radius:50px;border:1.5px solid #e2e8f0;font-size:14px;background:#f8fafc;font-family:inherit;outline:none}
-    .chat-input-row input:focus{border-color:#a5b4fc}
-    .chat-send-btn{width:42px;height:42px;border-radius:50%;background:#6366f1;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s}
-    .chat-send-btn:hover{background:#4f46e5}
-    .chat-send-btn:disabled{background:#cbd5e1;cursor:not-allowed}
-
-    /* 음성 STT */
-    .voice-center{display:flex;flex-direction:column;align-items:center;padding:20px 0;gap:16px}
-    .mic-btn{width:96px;height:96px;border-radius:50%;border:none;background:#6366f1;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(99,102,241,.3);transition:all .2s}
-    .mic-btn:hover{transform:scale(1.05)}
-    .mic-btn.listening{background:#ef4444;animation:pulse 1.5s infinite}
-    .mic-btn:disabled{background:#cbd5e1;box-shadow:none;cursor:not-allowed}
-    @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{box-shadow:0 0 0 14px rgba(239,68,68,0)}}
-    .voice-status{font-size:13px;font-weight:600;color:#64748b;text-align:center}
-    .voice-status.active{color:#ef4444}
-    .voice-transcript{width:100%;min-height:80px;background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:14px;padding:12px 16px;font-size:14px;color:#334155;line-height:1.5;margin-top:4px}
-    .hint{font-size:12px;color:#94a3b8;text-align:center}
+    .chat-row{display:flex;gap:8px;padding-top:10px;border-top:1.5px solid #f1f5f9;margin-top:6px}
+    .chat-row input{flex:1;padding:10px 14px;border-radius:50px;border:1.5px solid #e2e8f0;font-size:14px;background:#f8fafc;font-family:inherit;outline:none}
+    .chat-row input:focus{border-color:#a5b4fc}
+    .send-btn{width:42px;height:42px;border-radius:50%;background:#6366f1;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:background .2s}
+    .send-btn:hover{background:#4f46e5}
+    .send-btn:disabled{background:#cbd5e1;cursor:not-allowed}
 
     /* 폼 */
-    .item-card{background:#f8fafc;border-radius:16px;padding:14px;margin-bottom:10px}
-    .item-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-    .item-head span{font-size:12px;font-weight:700;color:#64748b}
-    .item-row{display:flex;gap:8px;margin-top:8px}
-    .item-row input{flex:1}
-    .subtotal{text-align:right;font-size:12px;color:#6366f1;font-weight:700;margin-top:6px}
-    .add-item{width:100%;padding:10px;background:none;border:2px dashed #c7d2fe;border-radius:14px;color:#818cf8;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s}
+    label.sec{display:block;font-size:11px;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.08em;margin:18px 0 8px}
+    label.sec:first-child{margin-top:0}
+    .icard{background:#f8fafc;border-radius:16px;padding:14px;margin-bottom:10px}
+    .ihead{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .ihead span{font-size:12px;font-weight:700;color:#64748b}
+    .irow{display:flex;gap:8px;margin-top:8px}
+    .irow input{flex:1}
+    .isub{text-align:right;font-size:12px;color:#6366f1;font-weight:700;margin-top:6px}
+    .add-item{width:100%;padding:10px;background:none;border:2px dashed #c7d2fe;border-radius:14px;color:#818cf8;font-size:13px;font-weight:600;cursor:pointer;transition:background .2s;font-family:inherit;margin-top:4px}
     .add-item:hover{background:#eef2ff}
     .del-btn{background:none;border:none;cursor:pointer;color:#cbd5e1;font-size:18px;line-height:1;padding:2px}
     .del-btn:hover{color:#ef4444}
     .total-row{display:flex;justify-content:space-between;align-items:center;padding:12px 4px;border-top:1.5px solid #e2e8f0;margin-top:4px}
-    .total-row .label{font-size:14px;font-weight:700;color:#475569}
+    .total-row .tlabel{font-size:14px;font-weight:700;color:#475569}
     .total-row .amount{font-size:15px;font-weight:800;color:#6366f1}
 
-    /* 완성 팝업 */
-    .popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:100;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
-    .popup-overlay.show{opacity:1;pointer-events:all}
-    .popup-box{background:#fff;width:100%;max-width:440px;border-radius:28px 28px 0 0;padding:32px 24px calc(32px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .35s cubic-bezier(.34,1.56,.64,1)}
-    .popup-overlay.show .popup-box{transform:translateY(0)}
-    .popup-icon{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#818cf8);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
-    .popup-title{font-size:20px;font-weight:800;color:#1e293b;text-align:center;margin-bottom:8px}
-    .popup-msg{font-size:14px;color:#64748b;text-align:center;line-height:1.6;margin-bottom:24px}
-    .popup-close{width:100%;padding:14px;background:#6366f1;color:#fff;border:none;border-radius:16px;font-size:14px;font-weight:700;cursor:pointer}
-    .popup-close:hover{background:#4f46e5}
+    /* 관리자 */
+    .ucard{background:#f8fafc;border-radius:16px;padding:14px;margin-bottom:10px}
+    .uname{font-size:15px;font-weight:700;color:#1e293b}
+    .uemail{font-size:13px;color:#64748b;margin-top:2px}
+    .umeta{font-size:11px;color:#94a3b8;margin-top:3px}
+    .ubadge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;margin-top:6px}
+    .b-pending{background:#fef3c7;color:#d97706}
+    .b-approved{background:#dcfce7;color:#16a34a}
+    .b-cancelled{background:#fee2e2;color:#dc2626}
+    .uacts{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .sec-title{font-size:12px;font-weight:700;color:#64748b;text-transform:uppercase;letter-spacing:.05em;margin:20px 0 8px}
+    .empty{text-align:center;color:#94a3b8;font-size:13px;padding:16px 0}
+
+    /* 팝업 */
+    .overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:200;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s}
+    .overlay.show{opacity:1;pointer-events:all}
+    .pbox{background:#fff;width:100%;max-width:440px;border-radius:28px 28px 0 0;padding:28px 24px calc(28px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .35s cubic-bezier(.34,1.56,.64,1);max-height:85vh;overflow-y:auto}
+    .overlay.show .pbox{transform:translateY(0)}
+    .picon{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#6366f1,#818cf8);display:flex;align-items:center;justify-content:center;margin:0 auto 14px}
+    .ptitle{font-size:18px;font-weight:800;color:#1e293b;text-align:center;margin-bottom:6px}
+    .email-preview{background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:14px;padding:16px;margin:10px 0;font-size:13px;color:#334155;line-height:1.8;white-space:pre-wrap;text-align:left}
+    .pclose{width:100%;padding:14px;background:#6366f1;color:#fff;border:none;border-radius:16px;font-size:14px;font-weight:700;cursor:pointer;margin-top:14px;font-family:inherit}
+    .pclose:hover{background:#4f46e5}
+
+    /* 상단바 */
+    .topbar{display:flex;justify-content:space-between;align-items:center;padding:16px 24px 0}
+    .topbar small{font-size:11px;font-weight:700;color:#818cf8;letter-spacing:.1em;text-transform:uppercase}
+    .ghost-btn{font-size:12px;color:#94a3b8;background:none;border:none;cursor:pointer;font-family:inherit}
+    .ghost-btn:hover{color:#ef4444}
   </style>
 </head>
 <body>
 
-<!-- 완성 팝업 -->
-<div class="popup-overlay" id="popup" onclick="closePopup(event)">
-  <div class="popup-box">
-    <div class="popup-icon">
-      <svg width="36" height="36" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+<!-- 팝업 -->
+<div class="overlay" id="popup" onclick="handleOverlayClick(event)">
+  <div class="pbox">
+    <div class="picon">
+      <svg width="26" height="26" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
     </div>
-    <div class="popup-title">견적서 완성! 🎉</div>
-    <div class="popup-msg" id="popup-msg">견적서가 완성되었습니다.<br/>담당자가 곧 연락드릴게요.</div>
-    <button class="popup-close" onclick="closePopup()">확인</button>
+    <div class="ptitle" id="p-title">견적서 완성! 🎉</div>
+    <div id="p-body"></div>
+    <button class="pclose" onclick="closePopup()">확인</button>
   </div>
 </div>
 
 <div class="card">
-  <div class="header">
-    <small>견적 요청</small>
-    <h1>무엇을 도와드릴까요?</h1>
-    <p>원하는 방식으로 견적을 요청해보세요</p>
-  </div>
 
-  <div class="tabs">
-    <button class="tab active" onclick="switchTab('message')">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-      메시지
-    </button>
-    <button class="tab" onclick="switchTab('voice')">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-      음성
-    </button>
-    <button class="tab" onclick="switchTab('form')">
-      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-      폼
-    </button>
-  </div>
-
-  <div class="content">
-
-    <!-- 메시지 탭: 채팅 -->
-    <div id="panel-message" class="panel active" style="display:flex;flex-direction:column;height:100%">
-      <div class="chat-area" id="chat-area">
-        <div class="chat-hint">견적 내용을 자유롭게 말씀해주세요.<br/>부족한 내용은 추가로 여쭤볼게요.</div>
+  <!-- ── 인증 화면 ── -->
+  <div id="sc-auth" class="screen active">
+    <div class="hd">
+      <small>견적 요청</small>
+      <h1>안녕하세요</h1>
+      <p>로그인하거나 계정을 만들어 시작하세요</p>
+    </div>
+    <div class="content">
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="authTab('login')">로그인</button>
+        <button class="auth-tab" onclick="authTab('register')">회원가입</button>
       </div>
-      <div class="chat-input-row">
-        <input type="text" id="chat-input" placeholder="메시지 입력..." onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat()}"/>
-        <button class="chat-send-btn" id="chat-send-btn" onclick="sendChat()">
-          <svg width="18" height="18" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        </button>
+
+      <!-- 로그인 -->
+      <div id="ap-login" class="auth-panel active">
+        <div class="fg">
+          <label>이메일</label>
+          <input type="email" id="l-email" placeholder="your@email.com"/>
+        </div>
+        <div class="fg">
+          <label>비밀번호</label>
+          <input type="password" id="l-pw" placeholder="비밀번호" onkeydown="if(event.key==='Enter')doLogin()"/>
+        </div>
+        <div class="err" id="l-err"></div>
+        <button class="btn" onclick="doLogin()">로그인</button>
+        <div class="divider"><span>또는</span></div>
+        <button class="btn btn-outline" onclick="authTab('register')">회원가입</button>
+      </div>
+
+      <!-- 회원가입 -->
+      <div id="ap-register" class="auth-panel">
+        <div class="fg">
+          <label>이메일 (아이디) *</label>
+          <input type="email" id="r-email" placeholder="your@email.com"/>
+        </div>
+        <div class="fg">
+          <label>비밀번호 * (6자 이상)</label>
+          <input type="password" id="r-pw" placeholder="6자 이상"/>
+        </div>
+        <div class="fg">
+          <label>이름 *</label>
+          <input type="text" id="r-name" placeholder="홍길동"/>
+        </div>
+        <div class="fg">
+          <label>생년월일 *</label>
+          <input type="date" id="r-birth"/>
+        </div>
+        <div class="err" id="r-err"></div>
+        <button class="btn" onclick="doRegister()">가입 신청하기</button>
+        <div class="divider"><span>또는</span></div>
+        <button class="btn btn-outline" onclick="authTab('login')">이미 계정이 있어요</button>
       </div>
     </div>
+    <div style="padding:0 24px 20px;text-align:center">
+      <button class="ghost-btn" onclick="goAdmin()" style="font-size:11px;color:#e2e8f0">관리자</button>
+    </div>
+  </div>
 
-    <!-- 음성 탭: STT -->
-    <div id="panel-voice" class="panel">
-      <p style="font-size:13px;color:#94a3b8;margin-bottom:16px">버튼을 누르고 말하면 텍스트로 변환돼요.</p>
-      <div class="voice-center">
-        <button class="mic-btn" id="mic-btn" onclick="toggleSTT()">
-          <svg width="32" height="32" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-        </button>
-        <p class="voice-status" id="voice-status">버튼을 눌러 말하기</p>
+  <!-- ── 대기 화면 ── -->
+  <div id="sc-wait" class="screen">
+    <div class="wait-wrap">
+      <div class="wait-icon">⏳</div>
+      <div class="wait-title">승인 대기 중</div>
+      <div class="wait-desc">
+        가입 신청이 완료되에습니다.<br/>
+        관리자 승인 후 서비스를 이용하실 수 있습니다.<br/>
+        영업일 기준 1~2일 이내 처리됩니다.
       </div>
-      <div class="voice-transcript" id="voice-transcript" style="display:none"></div>
-      <button class="btn" id="send-voice-btn" onclick="sendVoiceText()" disabled style="margin-top:16px">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        이 내용으로 견적 요청
+      <button class="btn btn-outline" onclick="doLogout()" style="margin-top:28px;max-width:220px">다른 계정으로 로그인</button>
+      <button class="ghost-btn" onclick="checkStatus()" style="margin-top:12px">승인 확인하기</button>
+    </div>
+  </div>
+
+  <!-- ── 앱 화면 ── -->
+  <div id="sc-app" class="screen">
+    <div class="topbar">
+      <small>견적 요청</small>
+      <button class="ghost-btn" onclick="doLogout()">로그아웃</button>
+    </div>
+    <div class="hd" style="padding-top:12px">
+      <h1>무엇을 도와드릴까요?</h1>
+      <p id="app-greeting">견적을 요청해보세요</p>
+    </div>
+
+    <div class="tabs">
+      <button class="tab active" onclick="appTab('voice')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+        음성
+      </button>
+      <button class="tab" onclick="appTab('form')">
+        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        폼
       </button>
     </div>
 
-    <!-- 폼 탭 -->
-    <div id="panel-form" class="panel">
-      <label class="section">기본 정보</label>
-      <input type="text" id="client-company" placeholder="고객사명 *"/>
-      <div style="margin-top:10px">
-        <label style="font-size:12px;color:#94a3b8;display:block;margin-bottom:4px">견적서 날짜</label>
-        <input type="date" id="project-date"/>
-      </div>
-      <label class="section">품목 <span style="font-weight:400;text-transform:none">(최대 4개)</span></label>
-      <div id="items-container"></div>
-      <button class="add-item" id="add-item-btn" onclick="addItem()">+ 품목 추가</button>
-      <div class="total-row" id="total-row" style="display:none">
-        <span class="label">합계</span>
-        <span class="amount" id="total-amount">0원</span>
-      </div>
-      <button class="btn" onclick="sendForm()">
-        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        견적서 요청 보내기
-      </button>
-    </div>
+    <div class="content">
+      <!-- 음성 패널 -->
+      <div id="pn-voice" class="panel active">
+        <p style="font-size:13px;color:#94a3b8;margin-bottom:2px">버튼을 누르고 말씀해주세요. 부족한 내용은 채팅으로 추�  요청드립니다.</p>
 
+        <div class="vc">
+          <button class="mic-btn" id="mic-btn" onclick="toggleSTT()">
+            <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
+          </button>
+          <p class="vs" id="vs-status">버튼을 눌러 말하기</p>
+        </div>
+
+        <div id="transcript" class="transcript" style="display:none"></div>
+
+        <button class="btn" id="voice-submit-btn" onclick="submitVoice()" disabled>
+          이 내용으로 견적 요청
+        </button>
+
+        <div class="chat-area" id="chat-area">
+          <div class="chat-hint">말씀하신 견적 내용에 부족한 부분이 있으면 여기서 추가로 안내드립니다.</div>
+        </div>
+        <div class="chat-row">
+          <input type="text" id="chat-in" placeholder="추�  내용 입력..." onkeydown="if(event.key==='Enter')sendChat()"/>
+          <button class="send-btn" onclick="sendChat()">
+            <svg width="16" height="16" fill="none" stroke="white" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- 폼 패널 -->
+      <div id="pn-form" class="panel">
+        <label class="sec">기본 정보</label>
+        <div class="fg">
+          <label>고객사명 *</label>
+          <input type="text" id="f-co" placeholder="회사명"/>
+        </div>
+        <div class="fg">
+          <label>견적서 날짜 *</label>
+          <input type="date" id="f-date"/>
+        </div>
+
+        <label class="sec">품목 <span style="font-weight:400;text-transform:none;font-size:10px">(최대 4개)</span></label>
+        <div id="items"></div>
+        <button class="add-item" id="add-btn" onclick="addItem()">+ 품목 추� </button>
+        <div class="total-row" id="total-row" style="display:none">
+          <span class="tlabel">합계</span>
+          <span class="amount" id="total-amt">0원</span>
+        </div>
+
+        <button class="btn" id="form-submit-btn" onclick="submitForm()">
+          <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          견적서 요청 보내기
+        </button>
+      </div>
+    </div>
   </div>
-</div>
+
+  <!-- ── 관리자 화면 ── -->
+  <div id="sc-admin" class="screen">
+    <div class="hd">
+      <small>🛡️ 관리자</small>
+      <h1>관리자 패널</h1>
+      <p>회원 가입 요청을 승인하거나 관리하세요</p>
+    </div>
+    <div class="content">
+
+      <!-- 관리자 로그인 -->
+      <div id="admin-login">
+        <div class="fg">
+          <label>관리자 비밀번호</label>
+          <input type="password" id="adm-pw" placeholder="비밀번호" onkeydown="if(event.key==='Enter')doAdminLogin()"/>
+        </div>
+        <div class="err" id="adm-err"></div>
+        <button class="btn" onclick="doAdminLogin()">관리자 로그인</button>
+        <button class="btn btn-outline" onclick="show('sc-auth')">돌아가기</button>
+      </div>
+
+      <!-- 관리자 패널 -->
+      <div id="admin-panel" style="display:none">
+        <div style="display:flex;justify-content:flex-end;margin-bottom:4px">
+          <button class="ghost-btn" onclick="doAdminLogout()">로그아웃</button>
+        </div>
+
+        <div class="sec-title">⏳ 승인 대기</div>
+        <div id="adm-pending"></div>
+
+        <div class="sec-title">✅ 승인된 회원</div>
+        <div id="adm-approved"></div>
+
+        <div class="sec-title">🚫 취소 / 탈퇴</div>
+        <div id="adm-cancelled"></div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- .card -->
 
 <script>
-const WEBHOOK = "https://hanjiho.app.n8n.cloud/webhook/tally-invoice";
+const WEBHOOK = 'https://hanjiho.app.n8n.cloud/webhook/tally-invoice';
+const ADM_PW  = 'admin1234'; // ← 관리자 비밀번호 변경 가능
 
-// ── 탭 전환 ────────────────────────────────────────────────────────────────
-function switchTab(id) {
-  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',['message','voice','form'][i]===id));
-  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
-  document.getElementById('panel-'+id).classList.add('active');
+/* ── DB ───────────────────────────────────────── */
+const DB = {
+  users:   () => JSON.parse(localStorage.getItem('q_users')   || '[]'),
+  save:    u  => localStorage.setItem('q_users', JSON.stringify(u)),
+  session: () => JSON.parse(localStorage.getItem('q_sess')    || 'null'),
+  setSess: s  => localStorage.setItem('q_sess',  JSON.stringify(s)),
+  clrSess: () => localStorage.removeItem('q_sess'),
+  isAdm:   () => sessionStorage.getItem('q_adm') === '1',
+  setAdm:  v  => v ? sessionStorage.setItem('q_adm','1') : sessionStorage.removeItem('q_adm'),
+};
+
+/* ── 화면 전환 ─────────────────────────────────── */
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
 
-// ── 팝업 ───────────────────────────────────────────────────────────────────
-function showPopup(msg) {
-  if (msg) document.getElementById('popup-msg').innerHTML = msg;
-  document.getElementById('popup').classList.add('show');
-  // 브라우저 알림 (권한 있으면)
-  if (Notification.permission === 'granted') {
-    new Notification('견적서 완성! 🎉', { body: '견적서가 완성되었습니다.', icon: '/icon-192.png' });
+/* ── 인증 탭 ───────────────────────────────────── */
+function authTab(t) {
+  document.querySelectorAll('.auth-tab').forEach((el,i) =>
+    el.classList.toggle('active', ['login','register'][i] === t));
+  document.querySelectorAll('.auth-panel').forEach(el => el.classList.remove('active'));
+  document.getElementById('ap-' + t).classList.add('active');
+  document.getElementById('l-err').textContent = '';
+  document.getElementById('r-err').textContent = '';
+}
+
+/* ── 회원가입 ─────────────────────────────────── */
+function doRegister() {
+  const email = document.getElementById('r-email').value.trim().toLowerCase();
+  const pw    = document.getElementById('r-pw').value;
+  const name  = document.getElementById('r-name').value.trim();
+  const birth = document.getElementById('r-birth').value;
+  const err   = document.getElementById('r-err');
+
+  if (!email || !pw || !name || !birth) { err.textContent = '모든 항목을 입력해주세요.'; return; }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { err.textContent = '올바른 이메일 형식이 아닙니다.'; return; }
+  if (pw.length < 6) { err.textContent = '비밀번호는 6자 이상이어야 합니다.'; return; }
+
+  const users = DB.users();
+  const exist = users.find(u => u.email === email);
+
+  if (exist) {
+    if (exist.status === 'cancelled') {
+      // 재가입 허용
+      Object.assign(exist, { pw, name, birth, status: 'pending', createdAt: Date.now() });
+      DB.save(users);
+      DB.setSess({ id: exist.id, email, name });
+      show('sc-wait');
+      return;
+    }
+    err.textContent = '이미 사용 중인 이메일입니다.';
+    return;
+  }
+
+  const u = { id: Date.now().toString(36), email, pw, name, birth, status: 'pending', createdAt: Date.now() };
+  users.push(u);
+  DB.save(users);
+  DB.setSess({ id: u.id, email, name });
+  show('sc-wait');
+}
+
+/* ── 로그인 ────────────────────────────────────── */
+function doLogin() {
+  const email = document.getElementById('l-email').value.trim().toLowerCase();
+  const pw    = document.getElementById('l-pw').value;
+  const err   = document.getElementById('l-err');
+
+  if (!email || !pw) { err.textContent = '이메일과 비밀번호를 입력해주세요.'; return; }
+
+  const user = DB.users().find(u => u.email === email && u.pw === pw);
+  if (!user)                      { err.textContent = '이메일 또는 비밀번호가 틀렸습니다.'; return; }
+  if (user.status === 'cancelled'){ err.textContent = '사용이 중지된 계정입니다.'; return; }
+
+  DB.setSess({ id: user.id, email: user.email, name: user.name });
+
+  if (user.status === 'pending') {
+    show('sc-wait');
+  } else {
+    enterApp(user.name);
   }
 }
-function closePopup(e) {
-  if (e && e.target !== document.getElementById('popup')) return;
-  document.getElementById('popup').classList.remove('show');
-}
-// 알림 권한 요청
-if ('Notification' in window && Notification.permission === 'default') {
-  Notification.requestPermission();
+
+/* ── 로그아웃 ──────────────────────────────────── */
+function doLogout() {
+  DB.clrSess();
+  document.getElementById('l-email').value = '';
+  document.getElementById('l-pw').value    = '';
+  document.getElementById('l-err').textContent = '';
+  show('sc-auth');
 }
 
-// ── 채팅 (메시지 탭) ────────────────────────────────────────────────────────
+/* ── 승인 확인 (대기 화면 새로고침) ─────────────── */
+function checkStatus() {
+  const sess = DB.session();
+  if (!sess) { show('sc-auth'); return; }
+  const user = DB.users().find(u => u.id === sess.id);
+  if (!user || user.status === 'cancelled') { DB.clrSess(); show('sc-auth'); return; }
+  if (user.status === 'approved') { enterApp(user.name); return; }
+  alert('아직 승인 대기 중입니다. 조금 더 기다려주세요.');
+}
+
+/* ── 앱 진입 ───────────────────────────────────── */
+function enterApp(name) {
+  document.getElementById('app-greeting').textContent = name + '님, 견적을 요청해보세요';
+  chatHistory = [];
+  finalTxt    = '';
+  initForm();
+  show('sc-app');
+}
+
+/* ── 앱 탭 ─────────────────────────────────────── */
+function appTab(t) {
+  document.querySelectorAll('.tab').forEach((el,i) =>
+    el.classList.toggle('active', ['voice','form'][i] === t));
+  document.querySelectorAll('.panel').forEach(el => el.classList.remove('active'));
+  document.getElementById('pn-' + t).classList.add('active');
+}
+
+/* ── 팝업 ──────────────────────────────────────── */
+function openPopup(title, emailDraft) {
+  document.getElementById('p-title').textContent = title || '견적서 완성! 🎉';
+  const body = document.getElementById('p-body');
+  if (emailDraft) {
+    body.innerHTML =
+      `<p style="font-size:13px;color:#64748b;text-align:center;margin-bottom:6px">다음 내용으로 이메일 드래프트가 생성되었습니다.</p>` +
+      `<div class="email-preview">${escHtml(emailDraft)}</div>`;
+  } else {
+    body.innerHTML = `<p style="font-size:13px;color:#64748b;text-align:center">견적 요청이 접수되었습니다.<br/>담당자가 곧 연락드립니다.</p>`;
+  }
+  document.getElementById('popup').classList.add('show');
+}
+function closePopup() { document.getElementById('popup').classList.remove('show'); }
+function handleOverlayClick(e) { if (e.target === document.getElementById('popup')) closePopup(); }
+function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br/>'); }
+
+/* ── STT ────────────────────────────────────────── */
+let recog = null, isListening = false, finalTxt = '';
+
+function initSTT() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    document.getElementById('vs-status').textContent = '이 브라우저는 음성 인식을 지원하지 않아요';
+    document.getElementById('mic-btn').disabled = true;
+    return false;
+  }
+  recog = new SR();
+  recog.lang = 'ko-KR';
+  recog.continuous = true;
+  recog.interimResults = true;
+  recog.onresult = e => {
+    let interim = '';
+    finalTxt = '';
+    for (let i = 0; i < e.results.length; i++) {
+      if (e.results[i].isFinal) finalTxt += e.results[i][0].transcript;
+      else interim += e.results[i][0].transcript;
+    }
+    const box = document.getElementById('transcript');
+    box.style.display = 'block';
+    box.textContent   = finalTxt + interim;
+    document.getElementById('voice-submit-btn').disabled = !finalTxt;
+  };
+  recog.onend = () => { if (isListening) recog.start(); };
+  recog.onerror = e => { setVoiceStatus('오류: ' + e.error, false); stopSTT(); };
+  return true;
+}
+
+function toggleSTT() { isListening ? stopSTT() : startSTT(); }
+function startSTT() {
+  if (!recog && !initSTT()) return;
+  finalTxt = '';
+  document.getElementById('transcript').style.display = 'none';
+  document.getElementById('voice-submit-btn').disabled = true;
+  recog.start();
+  isListening = true;
+  document.getElementById('mic-btn').classList.add('on');
+  setVoiceStatus('듣고 있어요… (다시 누르면 중지)', true);
+}
+function stopSTT() {
+  if (recog) recog.stop();
+  isListening = false;
+  document.getElementById('mic-btn').classList.remove('on');
+  setVoiceStatus('버튼을 눌러 말하기', false);
+}
+function setVoiceStatus(txt, on) {
+  const el = document.getElementById('vs-status');
+  el.textContent = txt;
+  el.className   = 'vs' + (on ? ' on' : '');
+}
+
+/* ── 음성 견적 전송 ────────────────────────────── */
 let chatHistory = [];
 
-function addBubble(type, text) {
+async function submitVoice() {
+  const text = document.getElementById('transcript').textContent.trim();
+  if (!text) return;
+  stopSTT();
+  const btn = document.getElementById('voice-submit-btn');
+  btn.disabled = true; btn.textContent = '전송 중…';
+
+  addBubble('user', text);
+  chatHistory.push({ role: 'user', content: text });
+
+  try {
+    const d = await postWebhook({ source_type: 'voice', content: text, history: chatHistory });
+    handleWebhookResp(d);
+  } catch { addBubble('bot', '❌ 전송 실패. 인터넷 연결을 확인해주세요.'); }
+
+  btn.disabled = false; btn.textContent = '이 내용으로 견적 요청';
+}
+
+/* ── 채팅 전송 ─────────────────────────────────── */
+async function sendChat() {
+  const input = document.getElementById('chat-in');
+  const text  = input.value.trim();
+  if (!text) return;
+  input.value = '';
+
+  addBubble('user', text);
+  chatHistory.push({ role: 'user', content: text });
+  const typing = addBubble('typing', '입력 중…');
+
+  try {
+    const d = await postWebhook({ source_type: 'chat', content: text, history: chatHistory });
+    typing.remove();
+    handleWebhookResp(d);
+  } catch { typing.remove(); addBubble('bot', '❌ 전송 실패. 인터넷 연결을 확인해주세요.'); }
+}
+
+fuJfunction addBubble(type, text) {
   const area = document.getElementById('chat-area');
-  const div = document.createElement('div');
+  const div  = document.createElement('div');
   div.className = 'bubble ' + type;
   div.textContent = text;
   area.appendChild(div);
@@ -215,223 +591,232 @@ function addBubble(type, text) {
   return div;
 }
 
-async function sendChat() {
-  const input = document.getElementById('chat-input');
-  const text = input.value.trim();
-  if (!text) return;
-  const btn = document.getElementById('chat-send-btn');
-  btn.disabled = true;
-  input.value = '';
-
-  addBubble('user', text);
-  chatHistory.push({role:'user', content:text});
-
-  const typing = addBubble('typing', '입력 중...');
-  try {
-    const res = await fetch(WEBHOOK, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({source_type:'message', content:text, history:chatHistory})
-    });
-    const data = await res.json().catch(()=>({}));
-    typing.remove();
-
-    if (data.done) {
-      addBubble('bot', data.message || '견적 요청이 접수되었습니다!');
-      showPopup(data.message ? data.message.replace(/\n/g,'<br/>') : null);
-      chatHistory = [];
-    } else if (data.reply) {
-      addBubble('bot', data.reply);
-      chatHistory.push({role:'assistant', content:data.reply});
-    } else {
-      addBubble('bot', '✅ 접수되었습니다!');
-      showPopup();
-    }
-  } catch {
-    typing.remove();
-    addBubble('bot', '❌ 전송 실패. 인터넷 연결을 확인해주세요.');
+function handleWebhookResp(d) {
+  if (d.done) {
+    openPopup('견적서 완성! 🎉', d.emailDraft || d.message || null);
+    chatHistory = [];
+    finalTxt    = '';
+    document.getElementById('transcript').textContent = '';
+    document.getElementById('transcript').style.display = 'none';
+    document.getElementById('voice-submit-btn').disabled = true;
+  } else if (d.reply) {
+    addBubble('bot', d.reply);
+    chatHistory.push({ role: 'assistant', content: d.reply });
+  } else {
+    openPopup('견적섧 완성! 🎉');
   }
-  btn.disabled = false;
-  input.focus();
 }
 
-// ── 음성 STT ───────────────────────────────────────────────────────────────
-let recognition = null;
-let isListening = false;
-let finalTranscript = '';
+/* ── 폼 ─────────────────────────────────────────── */
+let nextId = 1;
 
-function initSTT() {
-  const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRec) {
-    document.getElementById('voice-status').textContent = '이 브라우저는 음성 인식을 지원하지 않아요';
-    document.getElementById('mic-btn').disabled = true;
-    return false;
-  }
-  recognition = new SpeechRec();
-  recognition.lang = 'ko-KR';
-  recognition.continuous = true;
-  recognition.interimResults = true;
-
-  recognition.onresult = e => {
-    let interim = '';
-    finalTranscript = '';
-    for (let i = 0; i < e.results.length; i++) {
-      if (e.results[i].isFinal) finalTranscript += e.results[i][0].transcript;
-      else interim += e.results[i][0].transcript;
-    }
-    const box = document.getElementById('voice-transcript');
-    box.style.display = 'block';
-    box.textContent = (finalTranscript + interim) || '';
-    document.getElementById('send-voice-btn').disabled = !finalTranscript;
-  };
-
-  recognition.onend = () => {
-    if (isListening) recognition.start(); // continuous
-  };
-
-  recognition.onerror = e => {
-    document.getElementById('voice-status').textContent = '오류: ' + e.error;
-    stopSTT();
-  };
-  return true;
+function initForm() {
+  document.getElementById('items').innerHTML = '';
+  nextId = 1;
+  addItem();
+  document.getElementById('f-date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('f-co').value   = '';
+  document.getElementById('add-btn').style.display = '';
+  document.getElementById('total-row').style.display = 'none';
 }
-
-function toggleSTT() {
-  if (isListening) stopSTT();
-  else startSTT();
-}
-
-function startSTT() {
-  if (!recognition && !initSTT()) return;
-  finalTranscript = '';
-  document.getElementById('voice-transcript').style.display = 'none';
-  document.getElementById('send-voice-btn').disabled = true;
-  recognition.start();
-  isListening = true;
-  document.getElementById('mic-btn').classList.add('listening');
-  document.getElementById('voice-status').textContent = '듣고 있어요... (다시 누르면 중지)';
-  document.getElementById('voice-status').className = 'voice-status active';
-}
-
-function stopSTT() {
-  if (recognition) recognition.stop();
-  isListening = false;
-  document.getElementById('mic-btn').classList.remove('listening');
-  document.getElementById('voice-status').textContent = '버튼을 눌러 말하기';
-  document.getElementById('voice-status').className = 'voice-status';
-}
-
-async function sendVoiceText() {
-  const text = document.getElementById('voice-transcript').textContent.trim();
-  if (!text) return;
-  stopSTT();
-  const btn = document.getElementById('send-voice-btn');
-  btn.disabled = true;
-  btn.textContent = '전송 중...';
-  try {
-    const res = await fetch(WEBHOOK, {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({source_type:'voice', content:text})
-    });
-    const data = await res.json().catch(()=>({}));
-    if (data.done || !data.reply) {
-      showPopup(data.message ? data.message.replace(/\n/g,'<br/>') : null);
-      document.getElementById('voice-transcript').textContent = '';
-      document.getElementById('voice-transcript').style.display = 'none';
-    } else {
-      // 추가 질문 있으면 채팅탭으로 이동해서 계속
-      switchTab('message');
-      addBubble('user', text);
-      addBubble('bot', data.reply);
-      chatHistory = [{role:'user',content:text},{role:'assistant',content:data.reply}];
-    }
-  } catch {
-    alert('전송 실패. 인터넷 연결을 확인해주세요.');
-  }
-  btn.disabled = false;
-  btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> 이 내용으로 견적 요청';
-}
-
-// ── 폼 ─────────────────────────────────────────────────────────────────────
-let itemCount = 0;
 
 function addItem() {
-  if (itemCount >= 4) return;
-  itemCount++;
-  const n = itemCount;
+  const cont = document.getElementById('items');
+  if (cont.children.length >= 4) return;
+  const id  = nextId++;
+  const num = cont.children.length + 1;
   const div = document.createElement('div');
-  div.className = 'item-card'; div.id = 'item-'+n;
+  div.className = 'icard'; div.id = 'item-' + id;
   div.innerHTML = `
-    <div class="item-head">
-      <span>품목 ${n}</span>
-      ${n>1?`<button class="del-btn" onclick="removeItem(${n})">✕</button>`:''}
+    <div class="ihead">
+      <span>품목 ${num}</span>
+      ${num > 1 ? `<button class="del-btn" onclick="removeItem(${id})">✕</button>` : ''}
     </div>
-    <input type="text" placeholder="품목명${n===1?' *':''}" id="iname-${n}" oninput="calcTotal()"/>
-    <div class="item-row">
-      <input type="number" placeholder="수량" id="icount-${n}" min="1" oninput="calcTotal()"/>
-      <input type="number" placeholder="단가(원)" id="iprice-${n}" min="0" oninput="calcTotal()"/>
+    <input type="text"   placeholder="품목명 *"  data-f="name"  oninput="calcTotal()" style="margin-top:0"/>
+    <div class="irow">
+      <input type="number" placeholder="수량 *"   data-f="qty"   min="1" oninput="calcTotal()"/>
+      <input type="number" placeholder="단가(원) *" data-f="price" min="0" oninput="calcTotal()"/>
     </div>
-    <div class="subtotal" id="isub-${n}"></div>`;
-  document.getElementById('items-container').appendChild(div);
-  if (itemCount>=4) document.getElementById('add-item-btn').style.display='none';
-  if (n===1) document.getElementById('project-date').value = new Date().toISOString().split('T')[0];
+    <div class="isub" data-sub></div>`;
+  cont.appendChild(div);
+  if (cont.children.length >= 4) document.getElementById('add-btn').style.display = 'none';
 }
 
-function removeItem(n) {
-  document.getElementById('item-'+n).remove();
-  itemCount--;
-  document.getElementById('add-item-btn').style.display='block';
+function removeItem(id) {
+  document.getElementById('item-' + id).remove();
+  document.getElementById('add-btn').style.display = '';
+  document.querySelectorAll('.icard').forEach((c,i) =>
+    c.querySelector('.ihead span').textContent = '품목 ' + (i+1));
   calcTotal();
 }
 
 function calcTotal() {
   let total = 0;
-  for (let i=1;i<=4;i++) {
-    const cnt = parseFloat(document.getElementById('icount-'+i)?.value||0);
-    const prc = parseFloat(document.getElementById('iprice-'+i)?.value||0);
-    const sub = cnt*prc;
-    const el = document.getElementById('isub-'+i);
-    if (el) el.textContent = sub>0?`소계: ${sub.toLocaleString()}원`:'';
-    total+=sub;
-  }
+  document.querySelectorAll('.icard').forEach(c => {
+    const q = parseFloat(c.querySelector('[data-f=qty]').value   || 0);
+    const p = parseFloat(c.querySelector('[data-f=price]').value || 0);
+    const s = q * p;
+    c.querySelector('[data-sub]').textContent = s > 0 ? `소계: ${s.toLocaleString()}원` : '';
+    total += s;
+  });
   const row = document.getElementById('total-row');
-  if (total>0){row.style.display='flex';document.getElementById('total-amount').textContent=total.toLocaleString()+'원';}
-  else row.style.display='none';
+  if (total > 0) { row.style.display = 'flex'; document.getElementById('total-amt').textContent = total.toLocaleString() + '원'; }
+  else row.style.display = 'none';
 }
 
-async function sendForm() {
-  const company = document.getElementById('client-company').value.trim();
-  const date = document.getElementById('project-date').value;
-  const name1 = document.getElementById('iname-1')?.value.trim();
-  if (!company) return alert('고객사명을 입력해주세요.');
-  if (!name1) return alert('품목명을 입력해주세요.');
-  const fields = [{label:'고객사명',value:company},{label:'견적서 날짜',value:date}];
-  for (let i=1;i<=4;i++) {
-    const nm = document.getElementById('iname-'+i)?.value.trim();
-    if (!nm) continue;
-    fields.push({label:`품목 ${i} - 품목명`,value:nm});
-    fields.push({label:`품목 ${i} - 수량`,value:Number(document.getElementById('icount-'+i)?.value||1)});
-    fields.push({label:`품목 ${i} - 단가`,value:Number(document.getElementById('iprice-'+i)?.value||0)});
+async function submitForm() {
+  const co   = document.getElementById('f-co').value.trim();
+  const date = document.getElementById('f-date').value;
+  const cards = [...document.querySelectorAll('.icard')];
+  const missing = [];
+
+  if (!co)   missing.push('고객사명');
+  if (!date) missing.push('견적서 날짜');
+  if (cards.length === 0) missing.push('품목 (최소 1개)');
+
+  cards.forEach((c, i) => {
+    const n = i + 1;
+    if (!c.querySelector('[data-f=name]').value.trim())  missing.push(`품목 ${n} - 품목명`);
+    if (!c.querySelector('[data-f=qty]').value)          missing.push(`품목 ${n} - 수량`);
+    if (!c.querySelector('[data-f=price]').value)        missing.push(`품목 ${n} - 단가`);
+  });
+
+  if (missing.length) {
+    alert('다음 항목을 입력해주세요:\n\n• ' + missing.join('\n• '));
+    return;
   }
-  const btn = document.querySelector('#panel-form .btn');
-  btn.disabled=true; btn.textContent='전송 중...';
+
+  const sess   = DB.session();
+  const fields = [
+    { label: '고객사명',    value: co },
+    { label: '견적서 날짜', value: date },
+    { label: '담당자',      value: sess?.name  || '' },
+    { label: '이메일',      value: sess?.email || '' },
+  ];
+  cards.forEach((c, i) => {
+    const n   = i + 1;
+    const nm  = c.querySelector('[data-f=name]').value.trim();
+    const qty = Number(c.querySelector('[data-f=qty]').value);
+    const prc = Number(c.querySelector('[data-f=price]').value);
+    fields.push({ label: `품목${n}-품목명`, value: nm  });
+    fields.push({ label: `품목${n}-수량`,   value: qty });
+    fields.push({ label: `품목${n}-단가`,   value: prc });
+    fields.push({ label: `품목${n}-소계`,   value: qty * prc });
+  });
+
+  const btn = document.getElementById('form-submit-btn');
+  btn.disabled = true; btn.textContent = '전송 중…';
+
   try {
-    const res = await fetch(WEBHOOK, {
-      method:'POST', headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({data:{fields}})
-    });
-    const data = await res.json().catch(()=>({}));
-    showPopup(data.message ? data.message.replace(/\n/g,'<br/>') : null);
+    const d = await postWebhook({ source_type: 'form', data: { fields }, user: sess });
+    openPopup('견적서 완성! 🎉', d.emailDraft || d.message || null);
   } catch { alert('전송 실패. 인터넷 연결을 확인해주세요.'); }
-  btn.disabled=false;
-  btn.innerHTML='<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> 견적서 요청 보내기';
+
+  btn.disabled = false;
+  btn.innerHTML = '<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> 견적서 요청 보내기';
 }
 
-// ── 초기화 ─────────────────────────────────────────────────────────────────
-addItem();
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
+/* ── 공통 웹훅 ─────────────────────────────────── */
+async function postWebhook(payload) {
+  const sess = DB.session();
+  const res  = await fetch(WEBHOOK, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ...payload, user: sess })
+  });
+  return res.json().catch(() => ({}));
+}
+
+/* ── 관리자 ─────────────────────────────────────── */
+function goAdmin() {
+  show('sc-admin');
+  if (DB.isAdm()) renderAdmin();
+}
+
+function doAdminLogin() {
+  if (document.getElementById('adm-pw').value === ADM_PW) {
+    DB.setAdm(true);
+    document.getElementById('admin-login').style.display  = 'none';
+    document.getElementById('admin-panel').style.display  = 'block';
+    renderAdmin();
+  } else {
+    document.getElementById('adm-err').textContent = '비밀번호가 틀렸습니다.';
+  }
+}
+
+function doAdminLogout() {
+  DB.setAdm(false);
+  show('sc-auth');
+}
+
+function renderAdmin() {
+  document.getElementById('admin-login').style.display = 'none';
+  document.getElementById('admin-panel').style.display = 'block';
+  const all = DB.users();
+  const render = (id, list) => {
+    document.getElementById(id).innerHTML = list.length
+      ? list.map(uCard).join('')
+      : '<div class="empty">해당 회원이 없습니다.</div>';
+  };
+  render('adm-pending',   all.filter(u => u.status === 'pending'));
+  render('adm-approved',  all.filter(u => u.status === 'approved'));
+  render('adm-cancelled', all.filter(u => u.status === 'cancelled'));
+}
+
+function uCard(u) {
+  const lbl   = { pending:'대기 중', approved:'승인됨', cancelled:'취소됨' }[u.status];
+  const cls   = { pending:'b-pending', approved:'b-approved', cancelled:'b-cancelled' }[u.status];
+  const date  = new Date(u.createdAt).toLocaleDateString('ko-KR');
+  let acts = '';
+  if (u.status === 'pending') {
+    acts = `<button class="btn btn-success btn-sm" onclick="adm('approve','${u.id}')">승인</button>
+            <button class="btn btn-danger  btn-sm" onclick="adm('cancel','${u.id}')">거절</button>
+            <button class="btn btn-outline btn-sm" onclick="adm('delete','${u.id}')">삭제</button>`;
+  } else if (u.status === 'approved') {
+    acts = `<button class="btn btn-danger  btn-sm" onclick="adm('cancel','${u.id}')">승인 취소</button>
+            <button class="btn btn-outline btn-sm" onclick="adm('delete','${u.id}')">삭제</button>`;
+  } else {
+    acts = `<button class="btn btn-success btn-sm" onclick="adm('approve','${u.id}')">재승인</button>
+            <button class="btn btn-outline btn-sm" onclick="adm('delete','${u.id}')">완전 삭제</button>`;
+  }
+  return `<div class="ucard">
+    <div class="uname">${u.name}</div>
+    <div class="uemail">${u.email}</div>
+    <div class="umeta">생년월일: ${u.birth} · 가입일: ${date}</div>
+    <div><span class="ubadge ${cls}">${lbl}</span></div>
+    <div class="uacts">${acts}</div>
+  </div>`;
+}
+
+function adm(action, id) {
+  const users = DB.users();
+  const u     = users.find(x => x.id === id);
+  if (!u) return;
+  if (action === 'approve') {
+    u.status = 'approved';
+    DB.save(users); renderAdmin();
+  } else if (action === 'cancel') {
+    if (!confirm('승인을 취소하시겠습니까?\n해당 회원은 다시 가입할 수 있게 됩니다.')) return;
+    u.status = 'cancelled';
+    DB.save(users); renderAdmin();
+  } else if (action === 'delete') {
+    if (!confirm('회원을 삭제하시겠습니까?\n삭제 후 동일 이메일로 재가입이 가능합니다.')) return;
+    DB.save(users.filter(x => x.id !== id)); renderAdmin();
+  }
+}
+
+/* ── 앱 초기화 ──────────────────────────────────── */
+(function boot() {
+  const sess = DB.session();
+  if (sess) {
+    const user = DB.users().find(u => u.id === sess.id);
+    if (!user || user.status === 'cancelled') { DB.clrSess(); return; }
+    if (user.status === 'pending') { show('sc-wait'); return; }
+    enterApp(user.name);
+  }
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
+  if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
+})();
 </script>
 </body>
 </html>
- 
